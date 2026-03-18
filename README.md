@@ -1,256 +1,189 @@
-# Multi-Objective Particle Swarm Optimization (MOPSO)
+# 多目标粒子群优化算法 (MOPSO)
 
-## Project Overview
+## 项目概述
 
-This project implements a Multi-Objective Particle Swarm Optimization (MOPSO) algorithm based on Particle Swarm Optimization (PSO) for solving optimization problems with multiple conflicting objectives. The algorithm maintains an external archive to store non-dominated solutions (Pareto optimal solutions) and uses a crowding distance mechanism to maintain solution diversity.
+本项目实现了一个基于粒子群优化（PSO）的多目标优化算法（MOPSO），用于解决具有多个相互冲突目标的优化问题。算法通过维护一个外部存档来存储非支配解（Pareto最优解），并使用拥挤距离机制来保持解的多样性。
 
-## Algorithm Features
+## 算法特点
 
-1. **Multi-Objective Optimization**: Simultaneously optimizes two conflicting objective functions
-2. **External Archive Mechanism**: Maintains a set of non-dominated solutions (Pareto front)
-3. **Crowding Distance Selection**: Uses crowding distance to maintain solution diversity
-4. **Dynamic Visualization**: Real-time display of Pareto front evolution
-5. **Chinese Font Support**: Automatic configuration of Chinese fonts to ensure proper display of Chinese characters in charts
+1. **多目标优化**：同时优化两个相互冲突的目标函数
+2. **外部存档机制**：维护一个非支配解集（Pareto前沿）
+3. **拥挤距离筛选**：使用拥挤距离保持解集的多样性
+4. **动态可视化**：实时显示Pareto前沿的演化过程
+5. **中文字体支持**：自动配置中文字体，确保图表正确显示中文
 
-## File Structure
+## 文件结构
 
 ```
 MOPSO/
-├── MOPSO.py                    # Main program file containing complete MOPSO algorithm implementation
-├── 多目标优化算法实例.py       # Algorithm example file (Chinese name)
-├── README.md                   # Chinese documentation (this file)
-├── README_EN.md               # English documentation (this file)
-└── README_CN.md               # Chinese detailed documentation
+├── MOPSO.py                    # 主程序文件，包含完整的MOPSO算法实现
+├── 多目标优化算法实例.py       # 算法实例文件
+└── README.md                   # 项目说明文档
 ```
 
-## Algorithm Principles
+## 算法原理
 
-### 1. Particle Swarm Optimization Basics
-- Each particle represents a candidate solution
-- Particles update their position and velocity based on personal best and global best
-- Velocity update formula: `v = w*v + c1*r1*(pBest - x) + c2*r2*(gBest - x)`
+### 1. 粒子群优化基础
+- 每个粒子代表一个候选解
+- 粒子根据个体历史最优和全局最优更新位置和速度
+- 速度更新公式：`v = w*v + c1*r1*(pBest - x) + c2*r2*(gBest - x)`
 
-### 2. Multi-Objective Processing Mechanism
-- **Dominance Relationship Judgment**: Determines if one solution is dominated by another
-- **External Archive**: Stores all non-dominated solutions (Pareto optimal solutions)
-- **Crowding Distance**: Measures solution density in objective space to maintain diversity
+### 2. 多目标处理机制
+- **支配关系判断**：判断一个解是否被另一个解支配
+- **外部存档**：存储所有非支配解（Pareto最优解）
+- **拥挤距离**：衡量解在目标空间中的密度，用于保持多样性
 
-### 3. Objective Function
-Uses the ZDT1 test function:
-- Objective 1: `f1 = x1` (minimize)
-- Objective 2: `f2 = g * h`, where `g = 1 + 9*x2`, `h = 1 - sqrt(x1/g)` (minimize)
-- Variable ranges: `x1 ∈ [0, 1]`, `x2 ∈ [0, 5]`
+### 3. 目标函数
+使用ZDT1测试函数：
+- 目标1：`f1 = x1`（最小化）
+- 目标2：`f2 = g * h`，其中`g = 1 + 9*x2`，`h = 1 - sqrt(x1/g)`（最小化）
+- 变量范围：`x1 ∈ [0, 1]`，`x2 ∈ [0, 5]`
 
-## Parameter Settings
+## 参数设置
 
 ```python
-# Algorithm parameters
-pop = 100           # Population size
-dim = 2             # Problem dimension
-maxIter = 100       # Maximum iterations
-archive_size = 50   # Maximum archive capacity
+# 算法参数
+pop = 100           # 种群大小
+dim = 2             # 问题维度
+maxIter = 100       # 最大迭代次数
+archive_size = 50   # 存档最大容量
 
-# PSO parameters
-w = 0.5             # Inertia weight
-c1 = 1.0            # Individual learning factor
-c2 = 1.0            # Social learning factor
+# PSO参数
+w = 0.5             # 惯性权重
+c1 = 1.0            # 个体学习因子
+c2 = 1.0            # 社会学习因子
 
-# Boundary conditions
-lb = [0, 0]         # Lower bounds
-ub = [1, 5]         # Upper bounds
-v_min = [-0.5, -0.5] # Minimum velocity
-v_max = [0.5, 0.5]  # Maximum velocity
+# 边界条件
+lb = [0, 0]         # 下界
+ub = [1, 5]         # 上界
+v_min = [-0.5, -0.5] # 最小速度
+v_max = [0.5, 0.5]  # 最大速度
 ```
 
-## Core Functions
+## 核心函数
 
 ### 1. `ini(size, lower_bound, upper_bound, dim)`
-- **Function**: Initialize position or velocity
-- **Parameters**: Population size, lower bound, upper bound, dimension
-- **Returns**: Randomly initialized position/velocity matrix
+- 功能：初始化位置或速度
+- 参数：种群大小、下界、上界、维度
+- 返回：随机初始化的位置/速度矩阵
 
 ### 2. `fun(position)`
-- **Function**: Calculate objective function values
-- **Parameters**: Particle position
-- **Returns**: Array of two objective function values
+- 功能：计算目标函数值
+- 参数：粒子位置
+- 返回：两个目标函数值的数组
 
 ### 3. `is_dominated(fitness1, fitness2)`
-- **Function**: Determine dominance relationship
-- **Parameters**: Two fitness vectors
-- **Returns**: Boolean value indicating whether fitness1 is dominated by fitness2
+- 功能：判断支配关系
+- 参数：两个适应度向量
+- 返回：布尔值，表示fitness1是否被fitness2支配
 
 ### 4. `calculate_crowding_distance(fitness_vectors)`
-- **Function**: Calculate crowding distance
-- **Parameters**: Fitness vectors matrix
-- **Returns**: List of crowding distances for each solution
+- 功能：计算拥挤距离
+- 参数：适应度向量矩阵
+- 返回：每个解的拥挤距离列表
 
 ### 5. `update_archive(archive, new_position, max_archive_size)`
-- **Function**: Update external archive
-- **Parameters**: Current archive, new position, maximum archive capacity
-- **Returns**: Updated archive
+- 功能：更新外部存档
+- 参数：当前存档、新位置、存档最大容量
+- 返回：更新后的存档
 
-## Running Process
+## 运行流程
 
-### 1. Initialization Phase
-- Initialize particle positions and velocities
-- Calculate initial fitness
-- Initialize personal best and external archive
+1. **初始化阶段**
+   - 初始化粒子位置和速度
+   - 计算初始适应度
+   - 初始化个体最优和外部存档
 
-### 2. Iterative Optimization Phase
-- Update personal best solutions
-- Update external archive (add non-dominated solutions, remove dominated ones)
-- Use crowding distance selection to maintain archive diversity
-- Update particle velocities and positions
-- Dynamically update visualization every 10 iterations
+2. **迭代优化阶段**
+   - 更新个体最优解
+   - 更新外部存档（添加非支配解，移除被支配解）
+   - 使用拥挤距离筛选保持存档多样性
+   - 更新粒子速度和位置
+   - 每10次迭代动态更新可视化图表
 
-### 3. Result Output Phase
-- Display final Pareto front
-- Output positions and fitness values of optimal solutions
-- Save visualization results
+3. **结果输出阶段**
+   - 显示最终Pareto前沿
+   - 输出最优解的位置和适应度值
+   - 保存可视化结果
 
-## Installation and Running
+## 安装与运行
 
-### Environment Requirements
+### 环境要求
 - Python 3.6+
 - NumPy
 - Matplotlib
 
-### Install Dependencies
+### 安装依赖
 ```bash
 pip install numpy matplotlib
 ```
 
-### Run the Program
+### 运行程序
 ```bash
 python MOPSO.py
 ```
 
-## Output Results
+## 输出结果
 
-After running the program, it will display:
-1. **Iteration Process Information**: Shows progress and archive size for each iteration
-2. **Dynamic Visualization**: Updates Pareto front plot every 10 iterations
-3. **Final Results**:
-   - Number of Pareto front solutions
-   - Positions and fitness values of top 10 optimal solutions
-   - Final Pareto front visualization
+程序运行后会显示：
+1. **迭代过程信息**：显示每次迭代的进度和存档大小
+2. **动态可视化**：每10次迭代更新一次Pareto前沿图
+3. **最终结果**：
+   - Pareto前沿解的数量
+   - 前10个最优解的位置和适应度值
+   - 最终的Pareto前沿可视化图
 
-## Visualization Features
+## 可视化功能
 
-1. **Dynamic Updates**: Updates chart every 10 iterations
-2. **Fixed Axes**: Maintains consistent view range
-3. **Chinese Labels**: Automatic configuration of Chinese fonts
-4. **Interactive Mode**: Real-time display of optimization process
+1. **动态更新**：每10次迭代更新一次图表
+2. **固定坐标轴**：保持一致的视图范围
+3. **中文标签**：自动配置中文字体
+4. **交互模式**：实时显示优化过程
 
-## Algorithm Advantages
+## 算法优势
 
-1. **Efficiency**: PSO algorithm has fast convergence speed
-2. **Diversity**: Crowding distance mechanism ensures solution diversity
-3. **Practicality**: Suitable for real-world engineering multi-objective optimization problems
-4. **Visualization**: Real-time display of optimization process for easy understanding and debugging
+1. **高效性**：PSO算法具有较快的收敛速度
+2. **多样性**：拥挤距离机制保证了解的多样性
+3. **实用性**：适用于实际工程中的多目标优化问题
+4. **可视化**：实时显示优化过程，便于理解和调试
 
-## Application Areas
+## 应用领域
 
-- Engineering design optimization
-- Resource allocation problems
-- Scheduling optimization
-- Machine learning hyperparameter tuning
-- Financial portfolio optimization
+- 工程设计优化
+- 资源分配问题
+- 调度优化
+- 机器学习超参数调优
+- 金融投资组合优化
 
-## Extensions and Improvements
+## 扩展与改进
 
-### Possible Improvement Directions
-1. **Adaptive Parameters**: Implement adaptive inertia weight and learning factors
-2. **More Objective Functions**: Extend to three or more objectives
-3. **Constraint Handling**: Add constraint handling mechanisms
-4. **Parallel Computing**: Utilize multi-core CPU for acceleration
-5. **Other Test Functions**: Implement more standard test functions (e.g., ZDT2, ZDT3, etc.)
+### 可能的改进方向
+1. **自适应参数**：实现自适应的惯性权重和学习因子
+2. **更多目标函数**：扩展到三个或更多目标
+3. **约束处理**：添加约束处理机制
+4. **并行计算**：利用多核CPU加速计算
+5. **其他测试函数**：实现更多标准测试函数（如ZDT2、ZDT3等）
 
-### Custom Objective Functions
-To use custom objective functions, simply modify the implementation of the `fun()` function:
+### 自定义目标函数
+要使用自定义的目标函数，只需修改`fun()`函数的实现：
 ```python
 def fun(position):
-    # Custom objective functions
-    f1 = ...  # First objective
-    f2 = ...  # Second objective
+    # 自定义目标函数
+    f1 = ...  # 第一个目标
+    f2 = ...  # 第二个目标
     return np.array([f1, f2])
 ```
 
-## Key Concepts Explained
+## 许可证
 
-### 1. Pareto Optimal Solution
-In multi-objective optimization, a solution is called Pareto optimal if it is not worse than any other solution in all objectives and is better in at least one objective.
+本项目仅供学习和研究使用。
 
-### 2. Dominance Relationship
-Solution A dominates solution B if and only if:
-- Solution A is not worse than solution B in all objectives
-- Solution A is better than solution B in at least one objective
-
-### 3. Crowding Distance
-Used to measure the density of solutions in the objective space. Larger distances indicate sparser regions, which helps maintain solution set diversity.
-
-### 4. External Archive
-A collection used to store all non-dominated solutions (Pareto optimal solutions), dynamically updated during algorithm execution.
-
-## Frequently Asked Questions
-
-### Q1: How to modify the objective function?
-A: Modify the calculation logic in the `fun()` function, ensuring it returns an array containing all objective function values.
-
-### Q2: How to adjust algorithm parameters?
-A: Modify the parameter settings in the main program, such as population size, iteration count, learning factors, etc.
-
-### Q3: How to handle optimization problems with more dimensions?
-A: Adjust the `dim` parameter and ensure the objective function can handle inputs of the corresponding dimension.
-
-### Q4: How to save optimization results?
-A: Add code at the end of the program to save solutions from the archive to a file.
-
-## Code Examples
-
-### Running the MOPSO Algorithm
-```python
-# Import necessary libraries
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Run the main program
-if __name__ == "__main__":
-    # You can add custom initialization code here
-    # Then call the MOPSO algorithm
-    print("Starting MOPSO algorithm...")
-```
-
-### Viewing Optimization Results
-```python
-# View solutions in the archive
-for i, solution in enumerate(archive):
-    position = solution[0]
-    fitness = solution[1]
-    print(f"Solution {i+1}: Position={position}, Fitness={fitness}")
-```
-
-## References
-
-1. Coello, C. A. C., Pulido, G. T., & Lechuga, M. S. (2004). Handling multiple objectives with particle swarm optimization.
-2. Deb, K., Pratap, A., Agarwal, S., & Meyarivan, T. (2002). A fast and elitist multiobjective genetic algorithm: NSGA-II.
-3. Zitzler, E., Deb, K., & Thiele, L. (2000). Comparison of multiobjective evolutionary algorithms: Empirical results.
-
-## License
-
-This project is for learning and research purposes only.
-
-## Author
+## 作者
 
 afterglow321
 
-## Changelog
+## 更新日志
 
-- 2025-03-18: Initial version, basic MOPSO algorithm implementation
-- 2025-03-18: Added dynamic visualization functionality
-- 2025-03-18: Improved documentation and comments
-- 2026-03-18: Created English documentation
-
-## Contact
-
-For questions or suggestions, please submit an issue through the project repository.
+- 2025-03-18：初始版本，实现基本的MOPSO算法
+- 2025-03-18：添加动态可视化功能
+- 2025-03-18：完善文档和注释
