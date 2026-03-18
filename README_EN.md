@@ -12,17 +12,6 @@ This project implements a Multi-Objective Particle Swarm Optimization (MOPSO) al
 4. **Dynamic Visualization**: Real-time display of Pareto front evolution
 5. **Chinese Font Support**: Automatic configuration of Chinese fonts to ensure proper display of Chinese characters in charts
 
-## File Structure
-
-```
-MOPSO/
-├── MOPSO.py                    # Main program file containing complete MOPSO algorithm implementation
-├── 多目标优化算法实例.py       # Algorithm example file (Chinese name)
-├── README.md                   # Chinese documentation (this file)
-├── README_EN.md               # English documentation (this file)
-└── README_CN.md               # Chinese detailed documentation
-```
-
 ## Algorithm Principles
 
 ### 1. Particle Swarm Optimization Basics
