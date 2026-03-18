@@ -12,6 +12,7 @@ This project implements a Multi-Objective Particle Swarm Optimization (MOPSO) al
 4. **Dynamic Visualization**: Real-time display of Pareto front evolution
 5. **Chinese Font Support**: Automatic configuration of Chinese fonts to ensure proper display of Chinese characters in charts
 
+
 ## Algorithm Principles
 
 ### 1. Particle Swarm Optimization Basics
@@ -131,30 +132,6 @@ After running the program, it will display:
 3. **Chinese Labels**: Automatic configuration of Chinese fonts
 4. **Interactive Mode**: Real-time display of optimization process
 
-## Algorithm Advantages
-
-1. **Efficiency**: PSO algorithm has fast convergence speed
-2. **Diversity**: Crowding distance mechanism ensures solution diversity
-3. **Practicality**: Suitable for real-world engineering multi-objective optimization problems
-4. **Visualization**: Real-time display of optimization process for easy understanding and debugging
-
-## Application Areas
-
-- Engineering design optimization
-- Resource allocation problems
-- Scheduling optimization
-- Machine learning hyperparameter tuning
-- Financial portfolio optimization
-
-## Extensions and Improvements
-
-### Possible Improvement Directions
-1. **Adaptive Parameters**: Implement adaptive inertia weight and learning factors
-2. **More Objective Functions**: Extend to three or more objectives
-3. **Constraint Handling**: Add constraint handling mechanisms
-4. **Parallel Computing**: Utilize multi-core CPU for acceleration
-5. **Other Test Functions**: Implement more standard test functions (e.g., ZDT2, ZDT3, etc.)
-
 ### Custom Objective Functions
 To use custom objective functions, simply modify the implementation of the `fun()` function:
 ```python
@@ -164,66 +141,6 @@ def fun(position):
     f2 = ...  # Second objective
     return np.array([f1, f2])
 ```
-
-## Key Concepts Explained
-
-### 1. Pareto Optimal Solution
-In multi-objective optimization, a solution is called Pareto optimal if it is not worse than any other solution in all objectives and is better in at least one objective.
-
-### 2. Dominance Relationship
-Solution A dominates solution B if and only if:
-- Solution A is not worse than solution B in all objectives
-- Solution A is better than solution B in at least one objective
-
-### 3. Crowding Distance
-Used to measure the density of solutions in the objective space. Larger distances indicate sparser regions, which helps maintain solution set diversity.
-
-### 4. External Archive
-A collection used to store all non-dominated solutions (Pareto optimal solutions), dynamically updated during algorithm execution.
-
-## Frequently Asked Questions
-
-### Q1: How to modify the objective function?
-A: Modify the calculation logic in the `fun()` function, ensuring it returns an array containing all objective function values.
-
-### Q2: How to adjust algorithm parameters?
-A: Modify the parameter settings in the main program, such as population size, iteration count, learning factors, etc.
-
-### Q3: How to handle optimization problems with more dimensions?
-A: Adjust the `dim` parameter and ensure the objective function can handle inputs of the corresponding dimension.
-
-### Q4: How to save optimization results?
-A: Add code at the end of the program to save solutions from the archive to a file.
-
-## Code Examples
-
-### Running the MOPSO Algorithm
-```python
-# Import necessary libraries
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Run the main program
-if __name__ == "__main__":
-    # You can add custom initialization code here
-    # Then call the MOPSO algorithm
-    print("Starting MOPSO algorithm...")
-```
-
-### Viewing Optimization Results
-```python
-# View solutions in the archive
-for i, solution in enumerate(archive):
-    position = solution[0]
-    fitness = solution[1]
-    print(f"Solution {i+1}: Position={position}, Fitness={fitness}")
-```
-
-## References
-
-1. Coello, C. A. C., Pulido, G. T., & Lechuga, M. S. (2004). Handling multiple objectives with particle swarm optimization.
-2. Deb, K., Pratap, A., Agarwal, S., & Meyarivan, T. (2002). A fast and elitist multiobjective genetic algorithm: NSGA-II.
-3. Zitzler, E., Deb, K., & Thiele, L. (2000). Comparison of multiobjective evolutionary algorithms: Empirical results.
 
 ## License
 
